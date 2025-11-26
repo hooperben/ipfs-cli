@@ -29,8 +29,17 @@ func main() {
 				Aliases:   []string{"a"},
 				Usage:     "Authorize the CLI with your Pinata JWT",
 				ArgsUsage: "[your Pinata JWT]",
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:    "default",
+						Aliases: []string{"d"},
+						Value:   false,
+						Usage:   "Automatically select the first gateway without prompting",
+					},
+				},
 				Action: func(ctx *cli.Context) error {
-					err := auth.SaveJWT()
+					useDefault := ctx.Bool("default")
+					err := auth.SaveJWT(useDefault)
 					return err
 				},
 			},
@@ -505,7 +514,7 @@ func main() {
 						ArgsUsage: "[domain of the gateway]",
 						Action: func(ctx *cli.Context) error {
 							domain := ctx.Args().First()
-							err := gateways.SetGateway(domain)
+							err := gateways.SetGateway(domain, false)
 							return err
 						},
 					},
