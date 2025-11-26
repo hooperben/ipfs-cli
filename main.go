@@ -30,6 +30,12 @@ func main() {
 				Usage:     "Authorize the CLI with your Pinata JWT",
 				ArgsUsage: "[your Pinata JWT]",
 				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:    "token",
+						Aliases: []string{"t"},
+						Value:   "",
+						Usage:   "Pinata JWT token (skips interactive input)",
+					},
 					&cli.BoolFlag{
 						Name:    "default",
 						Aliases: []string{"d"},
@@ -38,8 +44,9 @@ func main() {
 					},
 				},
 				Action: func(ctx *cli.Context) error {
+					token := ctx.String("token")
 					useDefault := ctx.Bool("default")
-					err := auth.SaveJWT(useDefault)
+					err := auth.SaveJWT(useDefault, token)
 					return err
 				},
 			},
